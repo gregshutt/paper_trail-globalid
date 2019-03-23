@@ -13,7 +13,11 @@ module PaperTrailGlobalid
     # for example, whodunnit => "gid://app/Order/1" then
     # whodunnit_user will return Order.find_by(id: 1) in application scope.
     def actor
-      ::GlobalID::Locator.locate(whodunnit) || whodunnit
+      begin
+        ::GlobalID::Locator.locate(whodunnit) || whodunnit
+      rescue ActiveRecord::RecordNotFound
+        nil
+      end
     end
   end
 end
